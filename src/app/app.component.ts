@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { initializeApp,database } from 'firebase';
+import { firebaseConfig } from '../environments/firebase.config';
+import { AngularFireDatabase} from 'angularfire2/database';
+import { AngularFirestore} from 'angularfire2/firestore';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-root',
@@ -8,22 +12,13 @@ import { initializeApp,database } from 'firebase';
 })
 export class AppComponent {
   title = 'app';
-  constructor(){
+  items: Observable<any[]>;
+  constructor(db: AngularFirestore) {
 
-     // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyAdrTwCzvd1JP3GURbYNVeJaInVclv1wxs",
-    authDomain: "buymore-82df5.firebaseapp.com",
-    databaseURL: "https://buymore-82df5.firebaseio.com",
-    projectId: "buymore-82df5",
-    storageBucket: "buymore-82df5.appspot.com",
-    messagingSenderId: "744617899007"
-  };
-  initializeApp(config);
-  var rootRef = database().ref('lessons');
-rootRef.on('value',function(snap){
-console.log(snap.key,snap.val());
-  });
-
+    this.items = db.collection('courses').valueChanges();
+    this.items.subscribe(val=>console.log(val));
   }
+ 
+  }
+
 }
